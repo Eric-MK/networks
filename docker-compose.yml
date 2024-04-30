@@ -1,26 +1,15 @@
 version: '3.8'
 
 services:
-  server1:
+  load_balancer:
     build:
-      context: ./my_webserver2
+      context: .
+      dockerfile: ./load_balancer/Dockerfile
     ports:
-      - "5001:5000"
+      - "5000:5000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - SERVER_ID=1
+      - FLASK_ENV=development
 
-  server2:
-    build:
-      context: ./my_webserver2
-    ports:
-      - "5002:5000"
-    environment:
-      - SERVER_ID=2
-
-  server3:
-    build:
-      context: ./my_webserver2
-    ports:
-      - "5003:5000"
-    environment:
-      - SERVER_ID=3
+ 

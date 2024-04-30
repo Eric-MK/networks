@@ -2,21 +2,26 @@ from flask import Flask, request, jsonify
 import json
 import random
 import requests
-
-
-# from my_webserver2.consistent_hash import initialize_hash_map, map_request_to_server
-
-from myserver.consistent_hash import initialize_hash_map, map_request_to_server
-
+import docker
 
 
 app = Flask(__name__)
 
-# Simulated list of server containers for demonstration purposes
-server_containers = ['Server 1', 'Server 2', 'Server 3']
+client = docker.from_env()
+
+# Initialize global list
+server_containers = []
+
+def update_server_containers():
+    global server_containers
+    containers = client.containers.list()
+    server_containers = [container.name for container in containers if 'server' in container.name]
 
 @app.route('/rep', methods=['GET'])
 def get_replicas():
+    # Optionally update the list on every request
+    update_server_containers()
+    
     return jsonify({
         "message": {
             "N": len(server_containers),
@@ -98,6 +103,43 @@ def remove_servers():
     }), 200
 
 
+
+"""
+
+#define the hash functions
+def request_hash(i):
+    return (i + 2 * i**2 + 17) % 512
+
+def virtual_server_hash(i, j):
+    return (i + j + 2 * j**2 + 25) % 512
+
+
+#create the consistent hash map
+def initialize_hash_map(n, k, slots):
+    hash_map = [None] * slots
+    for i in range(n):
+        for j in range(k):
+            slot = virtual_server_hash(i, j)
+            # Implementing linear probing to resolve collisions
+            while hash_map[slot] is not None:
+                slot = (slot + 1) % slots #assign server container ID to the slot
+            hash_map[slot] = i
+    return hash_map
+
+
+#Map requaests to the hash map
+def map_request_to_server(request_id, hash_map):
+    slot = request_hash(request_id)
+    server_id = hash_map[slot]
+    if server_id is None:
+        #Implement linear probing for unassigned slots
+        original_slot = slot
+        while hash_map[slot] is None:
+            slot = (slot + 1) % 512
+            if slot == original_slot:
+                raise Exception("No available server found, hash map is full")
+    return hash_map[slot]
+
 # Initialize the hash map parameters
 N = 3  # Number of servers
 K = 9  # Number of replicas per server
@@ -107,7 +149,7 @@ servers = ["http://localhost:5001", "http://localhost:5002", "http://localhost:5
 
 
 
-""" @app.route('/<path:path>',methods=['GET'])
+ @app.route('/<path:path>',methods=['GET'])
 def proxy_request(path):
     try:
         # Convert incoming path to a unique integer hash code, you might need to adjust logic based on actual path usage
@@ -126,4 +168,5 @@ def proxy_request(path):
 
 
 if __name__ == '__main__':
+        update_server_containers()  # Initial update at startup
         app.run(host='0.0.0.0', port=5000, debug=True)
