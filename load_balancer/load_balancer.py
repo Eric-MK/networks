@@ -98,8 +98,6 @@ def remove_servers():
     }), 200
 
 
-app = Flask(__name__)
-
 # Initialize the hash map parameters
 N = 3  # Number of servers
 K = 9  # Number of replicas per server
@@ -109,7 +107,7 @@ servers = ["http://localhost:5001", "http://localhost:5002", "http://localhost:5
 
 
 
-@app.route('/<path:path>',methods=['GET'])
+""" @app.route('/<path:path>',methods=['GET'])
 def proxy_request(path):
     try:
         # Convert incoming path to a unique integer hash code, you might need to adjust logic based on actual path usage
@@ -124,7 +122,7 @@ def proxy_request(path):
         return jsonify(response.json()), response.status_code
     except Exception as e:
         return jsonify({"message": str(e), "status": "failure"}), 500
-
+"""
 
 
 if __name__ == '__main__':
