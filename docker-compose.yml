@@ -12,4 +12,26 @@ services:
     environment:
       - FLASK_ENV=development
 
- 
+  server1:
+    build:
+      context: ./myserver
+    ports:
+      - "5001:5000"
+    environment:
+      - SERVER_ID=1
+
+  server2:
+    build:
+      context: ./myserver
+    ports:
+      - "5002:5000"
+    environment:
+      - SERVER_ID=2
+
+  server3:
+    build:
+      context: ./myserver
+    ports:
+      - "5003:5000"
+    environment:
+      - SERVER_ID=3
