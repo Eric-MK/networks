@@ -15,6 +15,7 @@ services:
   server1:
     build:
       context: ./myserver
+    container_name: server1
     ports:
       - "5001:5000"
     environment:
@@ -23,6 +24,7 @@ services:
   server2:
     build:
       context: ./myserver
+    container_name: server2
     ports:
       - "5002:5000"
     environment:
@@ -31,6 +33,7 @@ services:
   server3:
     build:
       context: ./myserver
+    container_name: server3
     ports:
       - "5003:5000"
     environment:
