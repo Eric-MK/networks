@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from docker.errors import APIError, ContainerError
 import json
 import random
 import requests
@@ -15,7 +16,7 @@ server_containers = []
 def update_server_containers():
     global server_containers
     containers = client.containers.list()
-    server_containers = [container.name for container in containers if 'server' in container.name]
+    server_containers = [container.name for container in containers if 'server' in container.name.lower()]
 
 @app.route('/rep', methods=['GET'])
 def get_replicas():
@@ -30,30 +31,34 @@ def get_replicas():
         "status": "successful"
     }), 200
 
+#add
 @app.route('/add', methods=['POST'])
 def add_servers():
     data = request.json
-    if not data or 'n' not in data or (data.get('hostnames') and len(data['hostnames']) > data['n']):
-        return jsonify({
-            "message": "<Error> Invalid request payload",
-            "status": "failure"
-        }), 400
+    if not data or 'n' not in data:
+        return jsonify({"message": "Invalid request payload", "status": "failure"}), 400
 
     num_servers = data['n']
     hostnames = data.get('hostnames')
-    
+
     if hostnames and len(hostnames) != num_servers:
-        return jsonify({
-            "message": "<Error> Length of hostname list must match the number of new instances",
-            "status": "failure"
-        }), 400
+        return jsonify({"message": "Length of hostname list must match the number of new instances", "status": "failure"}), 400
 
     if not hostnames:
-        # Generate random hostnames if none provided
-        hostnames = [f"Server {len(server_containers) + i + 1}" for i in range(num_servers)]
+        hostnames = [f"server_{len(client.containers.list()) + i + 1}" for i in range(num_servers)]
 
-    server_containers.extend(hostnames)
-    
+   
+    for hostname in hostnames:
+        try:
+            container = client.containers.run("myproject_server", 
+                                              name=hostname,
+                                              ports={'5000/tcp': None},
+                                              detach=True,
+                                              environment=[f"SERVER_ID={hostname}"])
+            server_containers.append(container.name)
+        except (APIError, ContainerError) as e:
+            return jsonify({"message": f"Failed to create container {hostname}: {str(e)}", "status": "failure"}), 500
+    update_server_containers()  # Update the global list
     return jsonify({
         "message": {
             "N": len(server_containers),
@@ -61,7 +66,7 @@ def add_servers():
         },
         "status": "successful"
     }), 200
-
+    
 #remove
 @app.route('/rm', methods=['DELETE'])
 def remove_servers():
