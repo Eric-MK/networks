@@ -4,6 +4,8 @@ import json
 import random
 import requests
 import docker
+import re
+
 
 
 app = Flask(__name__)
@@ -36,7 +38,7 @@ def get_replicas():
 def add_servers():
     data = request.json
     if not data or 'n' not in data:
-        return jsonify({"message": "Invalid request payload", "status": "failure"}), 400
+        return jsonify({"message": "Invalid request payload: Length of hostname list must match the number of new instances", "status": "failure"}), 400
 
     num_servers = data['n']
     hostnames = data.get('hostnames')
@@ -45,8 +47,18 @@ def add_servers():
         return jsonify({"message": "Length of hostname list must match the number of new instances", "status": "failure"}), 400
 
     if not hostnames:
-        hostnames = [f"server_{len(client.containers.list()) + i + 1}" for i in range(num_servers)]
+        # List all current containers
+        containers = client.containers.list()
 
+        # Function to extract numbers from container names
+        def extract_number(name):
+            match = re.search(r'\d+', name)
+            return int(match.group()) if match else None
+
+        # Find the highest number used in container names
+        max_number = max((extract_number(container.name) for container in containers), default=0)
+
+        hostnames = [f"server_{max_number + i + 1}" for i in range(num_servers)]
    
     for hostname in hostnames:
         try:
