@@ -63,14 +63,16 @@ def add_servers():
         max_number = max((extract_number(container.name) for container in containers), default=0)
 
         hostnames = [f"server_{max_number + i + 1}" for i in range(num_servers)]
-   
     for hostname in hostnames:
         try:
-            container = client.containers.run("myproject_server", 
-                                              name=hostname,
-                                              ports={'5000/tcp': None},
-                                              detach=True,
-                                              environment=[f"SERVER_ID={hostname}"])
+            container = client.containers.run(
+                "myproject_server", 
+                name=hostname,
+                ports={'5000/tcp': None},
+                detach=True,
+                environment=[f"SERVER_ID={hostname}"],
+                network="loadbalancing_default"  # Specify the network
+            )
             server_containers.append(container.name)
             consistent_hash.add_server(container.name)  # Add to consistent hash
         except (APIError, ContainerError) as e:
@@ -83,7 +85,7 @@ def add_servers():
         },
         "status": "successful"
     }), 200
-    
+
 # Remove servers
 @app.route('/rm', methods=['DELETE'])
 def remove_servers():
