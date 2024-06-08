@@ -2,10 +2,10 @@ from flask import Flask, request, jsonify
 from docker.errors import APIError, ContainerError
 import json
 import random
-import requests
 import docker
 import re
 import logging
+import requests
 
 app = Flask(__name__)
 
@@ -18,6 +18,11 @@ def update_server_containers():
     global server_containers
     containers = client.containers.list()
     server_containers = [container.name for container in containers if 'server' in container.name.lower()]
+    # Update consistent hash with current servers
+    consistent_hash.hash_ring.clear()
+    consistent_hash.server_map.clear()
+    for server in server_containers:
+        consistent_hash.add_server(server)
 
 @app.route('/rep', methods=['GET'])
 def get_replicas():
@@ -67,6 +72,7 @@ def add_servers():
                                               detach=True,
                                               environment=[f"SERVER_ID={hostname}"])
             server_containers.append(container.name)
+            consistent_hash.add_server(container.name)  # Add to consistent hash
         except (APIError, ContainerError) as e:
             return jsonify({"message": f"Failed to create container {hostname}: {str(e)}", "status": "failure"}), 500
     update_server_containers()  # Update the global list
@@ -115,6 +121,7 @@ def remove_servers():
             container.remove()
             logging.info(f"Successfully stopped and removed container: {hostname}")
             server_containers.remove(hostname)
+            consistent_hash.remove_server(hostname)  # Remove from consistent hash
         except (APIError, ContainerError) as e:
             logging.error(f"Failed to remove container {hostname}: {str(e)}")
             return jsonify({"message": f"Failed to remove container {hostname}: {str(e)}", "status": "failure"}), 500
@@ -130,6 +137,70 @@ def remove_servers():
         },
         "status": "successful"
     }), 200
+
+
+import hashlib
+import bisect
+
+class ConsistentHash:
+    def __init__(self, num_slots=512, virtual_servers_per_server=9):
+        self.num_slots = num_slots
+        self.virtual_servers_per_server = virtual_servers_per_server
+        self.hash_ring = []
+        self.server_map = {}
+        
+    def _hash_function(self, key):
+        """Basic hash function"""
+        return int(hashlib.sha256(key.encode('utf-8')).hexdigest(), 16) % self.num_slots
+    
+    def _virtual_server_hash(self, server_id, replica_id):
+        """Generate hash for a virtual server"""
+        combined_id = f"{server_id}-{replica_id}"
+        hash_value = self._hash_function(combined_id)
+        return hash_value
+    
+    def add_server(self, server_id):
+        """Add server and its replicas to the hash ring"""
+        for i in range(self.virtual_servers_per_server):
+            virtual_hash = self._virtual_server_hash(server_id, i)
+            self.hash_ring.append(virtual_hash)
+            self.server_map[virtual_hash] = server_id
+        self.hash_ring.sort()
+    
+    def remove_server(self, server_id):
+        """Remove server and its replicas from the hash ring"""
+        self.hash_ring = [h for h in self.hash_ring if self.server_map[h] != server_id]
+        self.server_map = {h: s for h, s in self.server_map.items() if s != server_id}
+    
+    def get_server(self, key):
+        """Get server for the given key"""
+        if not self.hash_ring:
+            return None
+        hash_value = self._hash_function(key)
+        idx = bisect.bisect(self.hash_ring, hash_value)
+        if idx == len(self.hash_ring):
+            idx = 0
+        return self.server_map[self.hash_ring[idx]]
+
+# Initialize the consistent hash
+consistent_hash = ConsistentHash()
+
+
+
+# New endpoint using consistent hashing
+@app.route('/<path>', methods=['GET'])
+def route_request(path):
+    update_server_containers()  # Ensure server list is updated
+    target_server = consistent_hash.get_server(path)
+    if target_server:
+        # Forward the request to the selected server
+        try:
+            response = requests.get(f"http://{target_server}:5000/{path}")
+            return jsonify({"message": response.text, "server": target_server}), response.status_code
+        except requests.exceptions.RequestException as e:
+            return jsonify({"message": f"Error forwarding request to {target_server}: {str(e)}", "status": "failure"}), 500
+    else:
+        return jsonify({"message": "No available servers to handle the request", "status": "failure"}), 500
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
