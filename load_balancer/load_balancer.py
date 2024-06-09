@@ -6,6 +6,7 @@ import docker
 import re
 import logging
 import requests
+import os
 
 app = Flask(__name__)
 
@@ -141,6 +142,41 @@ def remove_servers():
     }), 200
 
 
+@app.route('/spawn', methods=['POST'])
+def spawn_container():
+    data = request.json
+    image = data.get('image')
+    name = data.get('name')
+    network = data.get('network', 'net1')
+    env_vars = data.get('env', {})
+
+    env_options = ' '.join([f"-e {key}={value}" for key, value in env_vars.items()])
+    command = f'sudo docker run --name {name} --network {network} --network-alias {name} {env_options} -d {image}'
+    
+    result = os.popen(command).read()
+    if len(result) == 0:
+        return jsonify({"message": "Unable to start container", "status": "failure"}), 500
+    else:
+        return jsonify({"message": "Successfully started container", "status": "success"}), 200
+
+@app.route('/remove', methods=['POST'])
+def remove_container():
+    data = request.json
+    name = data.get('name')
+
+    stop_command = f'sudo docker stop {name}'
+    remove_command = f'sudo docker rm {name}'
+
+    stop_result = os.system(stop_command)
+    remove_result = os.system(remove_command)
+
+    if stop_result == 0 and remove_result == 0:
+        return jsonify({"message": "Successfully removed container", "status": "success"}), 200
+    else:
+        return jsonify({"message": "Unable to remove container", "status": "failure"}), 500
+
+
+
 import hashlib
 import bisect
 
@@ -153,8 +189,10 @@ class ConsistentHash:
         
     def _hash_function(self, key):
         """Basic hash function"""
+        if isinstance(key, int):
+            key = str(key)  # Convert integer key to string
         return int(hashlib.sha256(key.encode('utf-8')).hexdigest(), 16) % self.num_slots
-    
+
     def _virtual_server_hash(self, server_id, replica_id):
         """Generate hash for a virtual server"""
         combined_id = f"{server_id}-{replica_id}"
@@ -187,15 +225,14 @@ class ConsistentHash:
 # Initialize the consistent hash
 consistent_hash = ConsistentHash()
 
-
-
-# New endpoint using consistent hashing
 @app.route('/<path>', methods=['GET'])
 def route_request(path):
     update_server_containers()  # Ensure server list is updated
-    target_server = consistent_hash.get_server(path)
+    # Assume unique request ID is passed as a query parameter, e.g., /home?request_id=12345
+    request_id = request.args.get('request_id', path)  # Default to path if no request_id provided
+    target_server = consistent_hash.get_server(request_id)
+    
     if target_server:
-        # Forward the request to the selected server
         try:
             response = requests.get(f"http://{target_server}:5000/{path}")
             return jsonify({"message": response.text, "server": target_server}), response.status_code

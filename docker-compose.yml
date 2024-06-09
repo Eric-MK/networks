@@ -12,6 +12,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - FLASK_ENV=development
+    privileged: true
 
   server1:
     build:
