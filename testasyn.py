@@ -21,7 +21,7 @@ def generate_request_id():
     return str(random.randint(100000, 999999))
 
 url = 'http://localhost:5000/home'  # Assuming the load balancer forwards to a `/test` endpoint
-num_requests = 5
+num_requests = 10000
 
 responses = asyncio.run(main(url, num_requests))
 
