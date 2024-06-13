@@ -25,6 +25,21 @@ def update_server_containers():
     for server in server_containers:
         consistent_hash.add_server(server)
 
+def spawn_server(hostname):
+    try:
+        container = client.containers.run(
+            "myproject_server", 
+            name=hostname,
+            ports={'5000/tcp': None},
+            detach=True,
+            environment=[f"SERVER_ID={hostname}"],
+            network="loadbalancing_default"  # Specify the network
+        )
+        server_containers.append(container.name)
+        consistent_hash.add_server(container.name)  # Add to consistent hash
+    except (APIError, ContainerError) as e:
+        logging.error(f"Failed to create container {hostname}: {str(e)}")
+
 @app.route('/rep', methods=['GET'])
 def get_replicas():
     # Optionally update the list on every request
@@ -65,19 +80,8 @@ def add_servers():
 
         hostnames = [f"server_{max_number + i + 1}" for i in range(num_servers)]
     for hostname in hostnames:
-        try:
-            container = client.containers.run(
-                "myproject_server", 
-                name=hostname,
-                ports={'5000/tcp': None},
-                detach=True,
-                environment=[f"SERVER_ID={hostname}"],
-                network="loadbalancing_default"  # Specify the network
-            )
-            server_containers.append(container.name)
-            consistent_hash.add_server(container.name)  # Add to consistent hash
-        except (APIError, ContainerError) as e:
-            return jsonify({"message": f"Failed to create container {hostname}: {str(e)}", "status": "failure"}), 500
+        spawn_server(hostname)
+        
     update_server_containers()  # Update the global list
     return jsonify({
         "message": {
@@ -237,7 +241,11 @@ def route_request(path):
             response = requests.get(f"http://{target_server}:5000/{path}")
             return jsonify({"message": response.text, "server": target_server}), response.status_code
         except requests.exceptions.RequestException as e:
-            return jsonify({"message": f"Error forwarding request to {target_server}: {str(e)}", "status": "failure"}), 500
+            # Detect failure and spawn new server instance
+            logging.error(f"Error forwarding request to {target_server}: {str(e)}. Spawning a new instance.")
+            new_hostname = "server_{}".format(max([int(re.search(r'\d+', name).group()) for name in server_containers]) + 1)
+            spawn_server(new_hostname)
+            return jsonify({"message": f"Error forwarding request to {target_server}: {str(e)}. New server instance {new_hostname} spawned.", "status": "failure"}), 500
     else:
         return jsonify({"message": "No available servers to handle the request", "status": "failure"}), 500
 
