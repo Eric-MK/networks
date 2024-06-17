@@ -83,3 +83,11 @@
 ```
 ![alt text](image-6.png)
 
+- To simulate an *error* where the n field is missing in the JSON payload:
+
+``` bash
+    curl -X POST http://localhost:5000/add -H "Content-Type: application/json" -d '{
+    "hostnames": ["server_20", "server_21", "server_30"]
+}'
+```
+![alt text](image-7.png)
