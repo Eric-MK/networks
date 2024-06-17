@@ -139,3 +139,11 @@
 - The load distribution is uneven, with `server_1` handling the most requests and `server_3` handling the least.
 - Possible reasons for this discrepancy could include the network latency, or environmental factors.
 
+**A-2 Scalability with Incrementing Servers N from 2 to 6**
+#### Observations
+
+![alt text](Figure_2.png)
+
+#### Analysis
+- The average load per server decreases as the number of servers increases.
+- The load balancer scales efficiently with more servers.

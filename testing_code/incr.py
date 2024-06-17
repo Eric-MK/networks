@@ -26,7 +26,7 @@ async def main(url, num_requests):
         return responses
 
 url = 'http://localhost:5000/home'  
-num_requests = 10
+num_requests = 10000
 
 server_counts = []
 average_loads = []
