@@ -106,3 +106,11 @@
 ```
 ![alt text](image-9.png)
 
+- don't provide hostnames, they should be selected randomly to be removed e.g 3:
+``` bash
+    curl -X DELETE http://localhost:5000/rm -H "Content-Type: application/json" -d '{
+    "n": 3
+}'
+```
+![alt text](image-10.png)
+
