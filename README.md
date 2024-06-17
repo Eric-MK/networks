@@ -52,11 +52,11 @@
 ```
 ## Testing and Performance Analysis
 
-**/rep endpoint `http://localhost:5000/rep`** 
+1. **/rep endpoint `http://localhost:5000/rep`** 
 
 ![alt text](image-1.png)
 
-**/heartbeat endpoint e.g for server at `http://localhost:5002/hearbeat`**
+2. **/heartbeat endpoint e.g for server at `http://localhost:5002/hearbeat` server_2**
 
 ![alt text](image-3.png)
 
