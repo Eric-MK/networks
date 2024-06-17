@@ -200,5 +200,5 @@
 - **server_2**: 3 requests
 
 **Observations**:
-- The load balancer effectively scaled down from 6 to 2 servers.
+- The load balancer effectively scaled down when deletion of 2 servers.
 - The load distribution post-scaling was balanced, and the system maintained the performance.
