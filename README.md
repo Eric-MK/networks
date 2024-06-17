@@ -15,6 +15,7 @@
 
 - **Single Load Balancer**: The setup assumes a single load balancer instance handling all incoming requests.
 - **Request Testing Endpoint**: Assumes testing the load balancer with requests to `http://localhost:5000/home` using different request IDs to verify load balancing functionality.
+- Used 10 request to test the server failure response, for better visual on the terminal.
 - **Development Environment**: Designed for development and testing purposes.
 
 ## Usage
