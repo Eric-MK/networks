@@ -160,7 +160,7 @@
 
 ![alt text](image-17.png)
 
-#### Initial Requests with 4 Servers
+#### Initial Requests with addition of 4 Servers
 
 - **server_4**: 1 request
 - **server_6**: 3 requests
@@ -169,7 +169,7 @@
 - **server_5**: 1 request
 - **server_7**: 2 requests
 
-#### Post-Failure Requests with 2 Servers
+#### Post-Failure Requests with deletion of 2 Servers
 
 - **server_1**: 2 requests
 - **server_2**: 3 requests
@@ -182,7 +182,7 @@
 
 ### Scaling Down Test
 
-#### Initial Requests with 6 Servers
+#### Initial Requests with addition of 6 Servers
 
 - **server_8**: 2 requests
 - **server_4**: 1 request
@@ -190,7 +190,7 @@
 - **server_9**: 1 request
 - **server_2**: 4 requests
 
-#### Post-Scaling Requests with 2 Servers
+#### Post-Scaling Requests with removing 2 Servers
 
 - **server_10**: 2 requests
 - **server_12**: 2 requests
