@@ -64,5 +64,15 @@
 
 ![alt text](image-4.png)
 
+4. **/add endpoint**
+- provide the n field and a list of hostnames:
+``` bash
+    curl -X POST http://localhost:5000/add -H "Content-Type: application/json" -d '{
+    "n": 4,
+    "hostnames": ["S5", "S4", "S10", "S11"]
+}'
+```
+
+
 
 
