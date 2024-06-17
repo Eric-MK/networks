@@ -207,6 +207,8 @@
 
 **A-1 Load Distribution Among 3 Servers**
 #### Observations
+
 ![alt text](Figure_4.png)
 
 #### Analysis
+
