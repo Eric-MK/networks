@@ -60,3 +60,9 @@
 
 ![alt text](image-3.png)
 
+3. **/home endpoint e.g for server at  `http://localhost:5001/home` server_1**
+
+![alt text](image-4.png)
+
+
+
