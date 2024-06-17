@@ -131,5 +131,11 @@
 ### Testing Load balancing
 
 **A-1 Load Distribution Among 3 Servers**
+### Observations
 
 ![alt text](Figure_1.png)
+
+### Analysis
+- The load distribution is uneven, with `server_1` handling the most requests and `server_3` handling the least.
+- Possible reasons for this discrepancy could include the network latency, or environmental factors.
+
