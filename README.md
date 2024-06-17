@@ -65,13 +65,14 @@
 ![alt text](image-4.png)
 
 4. **/add endpoint**
-- provide the n field and a list of hostnames:
+- provide the n field and a list of hostnames e.g adding 4:
 ``` bash
     curl -X POST http://localhost:5000/add -H "Content-Type: application/json" -d '{
     "n": 4,
-    "hostnames": ["S5", "S4", "S10", "S11"]
+    "hostnames": ["server_4", "server_5", "server_6", "server_7"]
 }'
 ```
+![alt text](image-5.png)
 
 
 
