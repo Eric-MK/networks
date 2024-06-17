@@ -130,3 +130,6 @@
 
 ### Testing Load balancing
 
+**A-1 Load Distribution Among 3 Servers**
+
+![alt text](Figure_1.png)
