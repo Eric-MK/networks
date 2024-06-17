@@ -114,3 +114,12 @@
 ```
 ![alt text](image-10.png)
 
+- Simulate a situation where the length of hostnames exceeds n:
+``` bash
+    curl -X DELETE http://localhost:5000/rm -H "Content-Type: application/json" -d '{
+    "n": 2,
+    "hostnames": ["server_1", "server_2", "server_3"]
+}'
+
+```
+![alt text](image-11.png)
