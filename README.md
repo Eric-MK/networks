@@ -91,3 +91,10 @@
 }'
 ```
 ![alt text](image-7.png)
+
+- confirm the replicas in the server after adding processes
+
+![alt text](image-8.png)
+
+5. **/rem endpoint**
+- 
