@@ -118,11 +118,15 @@
 ``` bash
     curl -X DELETE http://localhost:5000/rm -H "Content-Type: application/json" -d '{
     "n": 2,
-    "hostnames": ["server_1", "server_2", "server_3"]
+    "hostnames": ["server_5", "server_7", "server_8"]
 }'
 
 ```
-![alt text](image-11.png)
+![alt text](image-12.png)
+
+- confirmation of replicas after removing processes
+
+![alt text](image-13.png)
 
 ### Testing Load balancing
 
