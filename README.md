@@ -37,3 +37,15 @@
 ```bash
     curl -X GET http://localhost:5000/rep
 ```
+- To check heartbeat for server e.g. server1
+```bash
+    curl -X GET http://localhost:5001/heartbeat
+```
+- To add server e.g 3 servers
+```bash
+    curl -X POST http://localhost:5000/add     -H "Content-Type: application/json"     -d '{"n": 3}'
+```
+- To remove server e.g 1 server
+```bash
+   curl -X DELETE http://localhost:5000/rm     -H "Content-Type: application/json"     -d '{"n": 1}'
+```
