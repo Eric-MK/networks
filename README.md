@@ -8,7 +8,7 @@
 - **Makefile**: Provides convenient commands for Docker operations.
 - **Flask**: Chosen for its lightweight and easy-to-use framework for building the load balancer and server applications.
 - **Consistent Hashing**: Implemented for server selection based on request characteristics, ensuring even distribution of load.
-- **Docker**: Utilized for containerization, ensuring consistent deployment environments across different machines.
+- **Docker**: Utilized for containerization, ensuring consistent deployment environments across different machines. The containers created and added are in the same network environment for eficient communication.
 
 ## Assumptions
 
@@ -49,3 +49,6 @@
 ```bash
    curl -X DELETE http://localhost:5000/rm     -H "Content-Type: application/json"     -d '{"n": 1}'
 ```
+## Testing and Performance Analysis
+
+
