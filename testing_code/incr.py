@@ -1,3 +1,5 @@
+# Increment N testing from 2 to 6 
+
 import asyncio
 import aiohttp
 import random
@@ -23,7 +25,7 @@ async def main(url, num_requests):
         responses = await asyncio.gather(*tasks)
         return responses
 
-url = 'http://localhost:5000/home'  # Assuming the load balancer forwards to a `/home` endpoint
+url = 'http://localhost:5000/home'  
 num_requests = 10
 
 server_counts = []

@@ -1,3 +1,5 @@
+# Testing async requests to the load balancer
+
 import asyncio
 import aiohttp
 import random
@@ -20,7 +22,7 @@ async def main(url, num_requests):
 def generate_request_id():
     return str(random.randint(100000, 999999))
 
-url = 'http://localhost:5000/home'  # Assuming the load balancer forwards to a `/test` endpoint
+url = 'http://localhost:5000/home'  
 num_requests = 10000
 
 responses = asyncio.run(main(url, num_requests))

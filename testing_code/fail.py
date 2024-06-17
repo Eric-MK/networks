@@ -1,3 +1,5 @@
+# Test for Server Failure and how it response
+
 import requests
 import time
 import json
