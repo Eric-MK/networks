@@ -9,7 +9,7 @@
 - **Flask**: Chosen for its lightweight and easy-to-use framework for building the load balancer and server applications.
 - **Consistent Hashing**: Implemented for server selection based on request characteristics, ensuring even distribution of load.
 - **Docker**: Utilized for containerization, ensuring consistent deployment environments across different machines. 
-- The containers created and added are in the same network environment for efficient communication.
+- The containers created and added are in the same network environment for efficient communication e.g dynamic addition and removal of containers.
 
 ## Assumptions
 
@@ -97,4 +97,12 @@
 ![alt text](image-8.png)
 
 5. **/rem endpoint**
-- 
+- provide the n field and a list of hostnames to remove e.g. server_1 and server_2:
+``` bash
+    curl -X DELETE http://localhost:5000/rm -H "Content-Type: application/json" -d '{
+    "n": 2,
+    "hostnames": ["server_1", "server_2"]
+}'
+```
+![alt text](image-9.png)
+
