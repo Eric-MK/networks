@@ -147,3 +147,57 @@
 #### Analysis
 - The average load per server decreases as the number of servers increases.
 - The load balancer scales efficiently with more servers.
+
+**A-3 Load Balancer Recovery from Server Failure**
+
+#### Observations
+
+![alt text](image-14.png)
+
+![alt text](image-15.png)
+
+![alt text](image-16.png)
+
+![alt text](image-17.png)
+
+#### Initial Requests with 4 Servers
+
+- **server_4**: 1 request
+- **server_6**: 3 requests
+- **server_1**: 1 request
+- **server_2**: 2 requests
+- **server_5**: 1 request
+- **server_7**: 2 requests
+
+#### Post-Failure Requests with 2 Servers
+
+- **server_1**: 2 requests
+- **server_2**: 3 requests
+- **server_7**: 4 requests
+- **server_4**: 1 request
+
+**Observations**:
+- The load balancer quickly detected the removal of 2 servers and redistributed the load.
+- The response times remained stable, indicating efficient handling of server failures.
+
+### Scaling Down Test
+
+#### Initial Requests with 6 Servers
+
+- **server_8**: 2 requests
+- **server_4**: 1 request
+- **server_10**: 2 requests
+- **server_9**: 1 request
+- **server_2**: 4 requests
+
+#### Post-Scaling Requests with 2 Servers
+
+- **server_10**: 2 requests
+- **server_12**: 2 requests
+- **server_11**: 2 requests
+- **server_9**: 2 requests
+- **server_2**: 3 requests
+
+**Observations**:
+- The load balancer effectively scaled down from 6 to 2 servers.
+- The load distribution post-scaling was balanced, and the system maintained the performance.
