@@ -32,3 +32,8 @@
 ```bash
    make build
 ```
+3. **Access Load Balancer**
+- To check server replicas
+```bash
+    curl -X GET http://localhost:5000/rep
+```
