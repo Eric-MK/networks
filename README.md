@@ -202,3 +202,11 @@
 **Observations**:
 - The load balancer effectively scaled down when deletion of 2 servers.
 - The load distribution post-scaling was balanced, and the system maintained the performance.
+
+### Testing Load balancing for A-4 modifing the functions using md5
+
+**A-1 Load Distribution Among 3 Servers**
+#### Observations
+![alt text](Figure_4.png)
+
+#### Analysis
