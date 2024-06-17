@@ -56,5 +56,7 @@
 
 ![alt text](image-1.png)
 
-**
-![alt text](image-2.png)
+**/heartbeat endpoint e.g for server at `http://localhost:5002/hearbeat`**
+
+![alt text](image-3.png)
+
