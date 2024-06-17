@@ -24,6 +24,11 @@
 
 ### Building and Running
 
-**Build Docker Images:**
+1. **Build Docker Images:**
+```bash
+   make build 
+```
+2. **Start Services:**
 ```bash
    make build
+```
