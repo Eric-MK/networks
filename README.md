@@ -114,7 +114,7 @@
 ```
 ![alt text](image-10.png)
 
-- Simulate a situation where the length of hostnames exceeds n:
+- Simulate an *error* situation where the length of hostnames exceeds n:
 ``` bash
     curl -X DELETE http://localhost:5000/rm -H "Content-Type: application/json" -d '{
     "n": 2,
