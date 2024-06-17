@@ -74,6 +74,12 @@
 ```
 ![alt text](image-5.png)
 
+- If no provide hostnames, they are generated automatically based on the number n e.g adding 3 servers:
 
-
+``` bash
+    curl -X POST http://localhost:5000/add -H "Content-Type: application/json" -d '{
+    "n": 3
+}'
+```
+![alt text](image-6.png)
 
