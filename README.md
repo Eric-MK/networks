@@ -55,15 +55,15 @@
 
 1. **/rep endpoint `http://localhost:5000/rep`** 
 
-![alt text](image-1.png)
+![alt text](screenshot/image-1.png)
 
 2. **/heartbeat endpoint e.g for server at `http://localhost:5002/hearbeat` server_2**
 
-![alt text](image-3.png)
+![alt text](screenshot/image-3.png)
 
 3. **/home endpoint e.g for server at  `http://localhost:5001/home` server_1**
 
-![alt text](image-4.png)
+![alt text](screenshot/image-4.png)
 
 4. **/add endpoint**
 - provide the n field and a list of hostnames e.g adding 4:
@@ -73,7 +73,7 @@
     "hostnames": ["server_4", "server_5", "server_6", "server_7"]
 }'
 ```
-![alt text](image-5.png)
+![alt text](screenshot/image-5.png)
 
 - If no provide hostnames, they are generated automatically based on the number n e.g adding 3 servers:
 
@@ -82,7 +82,7 @@
     "n": 3
 }'
 ```
-![alt text](image-6.png)
+![alt text](screenshot/image-6.png)
 
 - To simulate an *error* where the n field is missing in the JSON payload:
 
@@ -91,11 +91,11 @@
     "hostnames": ["server_20", "server_21", "server_30"]
 }'
 ```
-![alt text](image-7.png)
+![alt text](screenshot/image-7.png)
 
 - confirm the replicas in the server after adding processes
 
-![alt text](image-8.png)
+![alt text](screenshot/image-8.png)
 
 5. **/rem endpoint**
 - provide the n field and a list of hostnames to remove e.g. server_1 and server_2:
@@ -105,7 +105,7 @@
     "hostnames": ["server_1", "server_2"]
 }'
 ```
-![alt text](image-9.png)
+![alt text](screenshot/image-9.png)
 
 - No hostnames, they should be selected randomly to be removed e.g 3:
 ``` bash
@@ -113,7 +113,7 @@
     "n": 3
 }'
 ```
-![alt text](image-10.png)
+![alt text](screenshot/image-10.png)
 
 - Simulate an *error* situation where the length of hostnames exceeds n:
 ``` bash
@@ -123,18 +123,18 @@
 }'
 
 ```
-![alt text](image-12.png)
+![alt text](screenshot/image-12.png)
 
 - confirmation of replicas after removing processes
 
-![alt text](image-13.png)
+![alt text](screenshot/image-13.png)
 
 ### Testing Load balancing
 
 **A-1 Load Distribution Among 3 Servers**
 #### Observations
 
-![alt text](Figure_1.png)
+![alt text](screenshot/Figure_1.png)
 
 #### Analysis
 - The load distribution is uneven, with `server_1` handling the most requests and `server_3` handling the least.
@@ -143,7 +143,7 @@
 **A-2 Scalability with Incrementing Servers N from 2 to 6**
 #### Observations
 
-![alt text](Figure_2.png)
+![alt text](screenshot/Figure_2.png)
 
 #### Analysis
 - The average load per server decreases as the number of servers increases.
@@ -153,13 +153,13 @@
 
 #### Observations
 
-![alt text](image-14.png)
+![alt text](screenshot/image-14.png)
 
-![alt text](image-15.png)
+![alt text](screenshot/image-15.png)
 
-![alt text](image-16.png)
+![alt text](screenshot/image-16.png)
 
-![alt text](image-17.png)
+![alt text](screenshot/image-17.png)
 
 #### Initial Requests with addition of 4 Servers
 
@@ -208,7 +208,7 @@
 **A-1 Load Distribution Among 3 Servers**
 #### Observations
 
-![alt text](Figure_4.png)
+![alt text](screenshot/Figure_4.png)
 
 #### Analysis
 
@@ -219,7 +219,7 @@
 **A-2 Scalability with Incrementing Servers N from 2 to 6**
 #### Observations
 
-![alt text](Figure_11.png)
+![alt text](screenshot/Figure_11.png)
 
 #### Analysis
 
