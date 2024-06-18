@@ -7,7 +7,7 @@
 - **docker-compose.yml**: Defines Docker services for load balancer and server instances.
 - **Makefile**: Provides convenient commands for Docker operations.
 - **Flask**: Chosen for its lightweight and easy-to-use framework for building the load balancer and server applications.
-- **Consistent Hashing**: Implemented for server selection based on request characteristics, ensuring even distribution of load.
+- **Consistent Hashing**: Implemented for server selection based on request characteristics, ensuring distribution of load to the servers.
 - **Docker**: Utilized for containerization, ensuring consistent deployment environments across different machines. 
 - The containers created and added are in the same network environment for efficient communication e.g dynamic addition and removal of containers.
 
