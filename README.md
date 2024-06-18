@@ -203,7 +203,7 @@
 - The load balancer effectively scaled down when deletion of 2 servers.
 - The load distribution post-scaling was balanced, and the system maintained the performance.
 
-### Testing Load balancing for A-4 modifing the functions using md5
+### Testing Load balancing for A-4 modifing the hash and virtual server functions using md5
 
 **A-1 Load Distribution Among 3 Servers**
 #### Observations
@@ -212,3 +212,16 @@
 
 #### Analysis
 
+- The MD5 hash function resulted in an imbalanced load distribution among the servers, with one server handling a significantly higher number of requests.
+- The load distribution with the MD5 hash function is less balanced compared to the original SHA-256 based hash function.
+- This imbalance indicates that the MD5 hash function might not be as effective in distributing requests evenly across servers.
+
+**A-2 Scalability with Incrementing Servers N from 2 to 6**
+#### Observations
+
+![alt text](Figure_11.png)
+
+#### Analysis
+
+- The average load per server decreases as the number of servers increases, indicating good scalability.
+- Despite the imbalances observed in A-1, the system scales well with the MD5 hash function, distributing the load across an increasing number of servers.
