@@ -190,18 +190,25 @@ class ConsistentHash:
         self.virtual_servers_per_server = virtual_servers_per_server
         self.hash_ring = []
         self.server_map = {}
-        
+
+    # sh256
     def _hash_function(self, key):
-        """Basic hash function"""
+    """Basic hash function"""
+    if isinstance(key, int):
+        key = str(key)  # Convert integer key to string
+    return int(hashlib.sha256(key.encode('utf-8')).hexdigest(), 16) % self.num_slots
+
+    # md5
+    ''' def _hash_function(self, key):
         if isinstance(key, int):
             key = str(key)  # Convert integer key to string
-        return int(hashlib.sha256(key.encode('utf-8')).hexdigest(), 16) % self.num_slots
+        return int(hashlib.md5(key.encode('utf-8')).hexdigest(), 16) % self.num_slots '''
 
     def _virtual_server_hash(self, server_id, replica_id):
-        """Generate hash for a virtual server"""
-        combined_id = f"{server_id}-{replica_id}"
+        combined_id = f"{server_id}#{replica_id}"
         hash_value = self._hash_function(combined_id)
         return hash_value
+
     
     def add_server(self, server_id):
         """Add server and its replicas to the hash ring"""
